@@ -1446,7 +1446,7 @@ function closeCheckout() { document.getElementById('checkout-modal').classList.r
 
 // ── SERVER URL ──
 const SERVER_URL = 'https://nodejs-production-6e08.up.railway.app';
-// ── YOUR PAYPAL CLIENT ID (live) — paste from PayPal Developer Dashboard ──
+// ── YOUR PAYPAL CLIENT ID (live) ──
 const PAYPAL_CLIENT_ID = 'YOUR_LIVE_PAYPAL_CLIENT_ID';
 
 let _currentOrderId = '';
@@ -1469,7 +1469,6 @@ async function startPayment() {
   _pendingItems = orderItems;
   _pendingTotal = total;
 
-  // Register order on server first
   try {
     const res = await fetch(`${SERVER_URL}/api/register-order`, {
       method: 'POST',
@@ -1482,7 +1481,6 @@ async function startPayment() {
     return;
   }
 
-  // Show PayPal button screen
   showPayPalScreen(orderId, email, orderItems, total);
 }
 
@@ -1490,11 +1488,10 @@ function showPayPalScreen(orderId, email, orderItems, total) {
   document.getElementById('checkout-modal-content').innerHTML = `
     <h2>Pay with PayPal</h2>
     <div class="modal-sub">Order ${orderId} · $${total.toFixed(2)}</div>
-    <div id="paypal-button-container" style="margin: 1.5rem 0"></div>
+    <div id="paypal-button-container" style="margin:1.5rem 0"></div>
     <div id="paypal-error" class="error-msg"></div>
     <button class="btn-cancel" style="width:100%;margin-top:0.5rem" onclick="closeCheckout()">Cancel</button>`;
 
-  // Dynamically load PayPal SDK then render button
   if (document.getElementById('paypal-sdk')) {
     renderPayPalButton(orderId, email, orderItems, total);
     return;
@@ -1512,41 +1509,31 @@ function showPayPalScreen(orderId, email, orderItems, total) {
 function renderPayPalButton(orderId, email, orderItems, total) {
   paypal.Buttons({
     style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
-
     createOrder: function(data, actions) {
       return actions.order.create({
         purchase_units: [{
-          custom_id: orderId,   // ← this is how the webhook matches the payment
+          custom_id: orderId,
           description: `Cor Market Order ${orderId}`,
-          amount: {
-            currency_code: 'USD',
-            value: total.toFixed(2),
-          }
+          amount: { currency_code: 'USD', value: total.toFixed(2) }
         }]
       });
     },
-
     onApprove: function(data, actions) {
       return actions.order.capture().then(function() {
-        // Payment captured — show pending screen and start polling
         showPendingScreen(orderId, email, orderItems, total);
         startPolling(orderId, email, orderItems, total);
       });
     },
-
     onError: function(err) {
       const errEl = document.getElementById('paypal-error');
       if (errEl) errEl.textContent = 'PayPal error. Please try again.';
-      console.error('PayPal error', err);
     },
-
     onCancel: function() {
       closeCheckout();
       showToast('Payment cancelled.');
     }
   }).render('#paypal-button-container');
 }
-
 function showPendingScreen(orderId, email, orderItems, total) {
   document.getElementById('checkout-modal-content').innerHTML = `
     <div style="text-align:center;padding:1rem 0">
@@ -1623,7 +1610,8 @@ function showSuccessScreen(orderId, email) {
         Check your inbox — your products have been sent to your email.<br>
         <span style="font-size:11px;color:var(--text-hint)">Don't see it? Check spam or contact support.</span>
       </p>
-      <button class="btn-cancel" style="margin-top:0.5rem;width:100%" onclick="closeCheckout()">Done</button>
+      <button class="btn-submit" style="width:100%;margin-bottom:8px" onclick="closeCheckout();openReviewModal('${orderId}')">⭐ Leave a Review</button>
+      <button class="btn-cancel" style="width:100%" onclick="closeCheckout()">Done</button>
     </div>`;
 }
 
@@ -1660,10 +1648,100 @@ function esc(s) {
 // ── INIT ──
 window.onload = function() {
   renderProducts();
-  renderReviews();
+  fetchReviews();
   renderStats();
 };
+
+// ── REVIEWS STORE (in-memory, fetched from server) ──
+let liveReviews = [];
+
+async function fetchReviews() {
+  try {
+    const res = await fetch(`${SERVER_URL}/api/reviews`);
+    const data = await res.json();
+    liveReviews = data.reviews || [];
+    renderReviews();
+  } catch(e) {}
+}
+
+function renderReviews() {
+  const allReviews = [...liveReviews, ...reviewsData];
+  const doubled = [...allReviews, ...allReviews];
+  document.getElementById('reviews-track').innerHTML = doubled.map(r => `
+    <div class="review-card">
+      <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+      <div class="review-text">${esc(r.text)}</div>
+      <div class="review-author">${esc(r.author)}</div>
+    </div>`).join('');
+}
+
+function openReviewModal(orderId) {
+  document.getElementById('review-modal-content').innerHTML = `
+    <h2>Leave a Review</h2>
+    <div class="modal-sub">Thanks for your purchase! Share your experience.</div>
+    <label style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:8px">Order ID</label>
+    <input class="form-input" id="review-order-id" placeholder="COR-XXXX-XXXX" value="${orderId || ''}">
+    <label style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:8px;margin-top:12px">Rating</label>
+    <div id="star-picker" style="display:flex;gap:8px;margin-bottom:16px">
+      ${[1,2,3,4,5].map(n => `<span onclick="setStarRating(${n})" style="font-size:28px;cursor:pointer;color:var(--text-hint);transition:color 0.15s" id="star-${n}">★</span>`).join('')}
+    </div>
+    <label style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:8px">Your Review</label>
+    <textarea class="form-input" id="review-text" placeholder="What did you think of your order?" rows="3" style="resize:vertical"></textarea>
+    <div id="review-error" class="error-msg"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeReviewModal()">Cancel</button>
+      <button class="btn-submit" onclick="submitReview()">Submit Review</button>
+    </div>`;
+  document.getElementById('review-modal').classList.add('open');
+  window._starRating = 0;
+}
+
+function closeReviewModal() {
+  document.getElementById('review-modal').classList.remove('open');
+}
+
+function setStarRating(n) {
+  window._starRating = n;
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`star-${i}`);
+    if (el) el.style.color = i <= n ? 'var(--warn)' : 'var(--text-hint)';
+  }
+}
+
+async function submitReview() {
+  const orderId = document.getElementById('review-order-id')?.value.trim();
+  const text = document.getElementById('review-text')?.value.trim();
+  const rating = window._starRating || 0;
+  const errEl = document.getElementById('review-error');
+
+  if (!orderId) { errEl.textContent = 'Please enter your Order ID.'; return; }
+  if (!rating) { errEl.textContent = 'Please select a star rating.'; return; }
+  if (!text || text.length < 10) { errEl.textContent = 'Please write at least 10 characters.'; return; }
+  errEl.textContent = '';
+
+  try {
+    const res = await fetch(`${SERVER_URL}/api/submit-review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, rating, text })
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = data.error || 'Could not submit review.'; return; }
+
+    closeReviewModal();
+    showToast('⭐ Thanks for your review!');
+    fetchReviews();
+  } catch(e) {
+    errEl.textContent = 'Could not connect to server. Try again.';
+  }
+}
+
 </script>
 
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="review-modal" onclick="if(event.target===this)closeReviewModal()">
+  <div class="modal" id="review-modal-content"></div>
+</div>
 </body>
 </html>
