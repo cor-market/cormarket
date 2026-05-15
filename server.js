@@ -29,6 +29,7 @@ const transporter = nodemailer.createTransport({
 // Format: { [corOrderId]: { email, items, total, paid } }
 const pendingOrders = {};
 app.use(cors({ origin: '*' }));
+app.options('*', cors({ origin: '*' }));
 
 // ── PAYPAL ACCESS TOKEN ──
 async function getPayPalAccessToken() {
