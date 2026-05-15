@@ -78,7 +78,7 @@ async function verifyWebhookSignature(req, eventBody) {
   }
 }
 
-app.use(cors({ origin: 'https://cor-market.github.io' }));
+app.use(cors({ origin: '*' }));
 
 // ── RAW BODY for webhook verification (must be before bodyParser) ──
 app.use('/api/paypal-webhook', express.raw({ type: 'application/json' }));
