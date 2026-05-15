@@ -225,6 +225,51 @@ async function sendDeliveryEmail(order, orderId) {
   console.log(`[EMAIL SENT] Delivery email sent to ${order.email}`);
 }
 
+
+// ── REVIEWS STORE (in-memory) ──
+const reviews = [];
+
+// ── GET REVIEWS ──
+app.get('/api/reviews', (req, res) => {
+  res.json({ reviews });
+});
+
+// ── SUBMIT REVIEW (only verified paid orders) ──
+app.post('/api/submit-review', (req, res) => {
+  const { orderId, rating, text } = req.body;
+
+  if (!orderId || !rating || !text) {
+    return res.status(400).json({ error: 'Missing fields.' });
+  }
+
+  const order = pendingOrders[orderId];
+  if (!order) {
+    return res.status(404).json({ error: 'Order ID not found. Make sure you copy it exactly.' });
+  }
+  if (!order.paid) {
+    return res.status(403).json({ error: 'Payment not confirmed for this order.' });
+  }
+  if (order.reviewed) {
+    return res.status(409).json({ error: 'You already left a review for this order.' });
+  }
+  if (rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'Invalid rating.' });
+  }
+  if (text.length < 10 || text.length > 500) {
+    return res.status(400).json({ error: 'Review must be between 10 and 500 characters.' });
+  }
+
+  order.reviewed = true;
+  reviews.unshift({
+    text,
+    rating,
+    author: 'Verified Buyer · just now'
+  });
+
+  console.log(`[REVIEW] Order ${orderId} left a ${rating}-star review`);
+  res.json({ success: true });
+});
+
 app.listen(PORT, () => {
   console.log(`Cor Market server running on port ${PORT}`);
 });
