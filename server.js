@@ -8,10 +8,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ── ENV VARIABLES (set these in Railway) ──
-const GMAIL_USER     = process.env.GMAIL_USER;      // rynxzas@gmail.com
-const GMAIL_PASS     = process.env.GMAIL_PASS;      // your app password
-const PAYPAL_EMAIL   = process.env.PAYPAL_EMAIL;    // rynxzas@gmail.com
-const FRONTEND_URL   = process.env.FRONTEND_URL;    // your Railway frontend URL
+const GMAIL_USER          = process.env.GMAIL_USER;         // rynxzas@gmail.com
+const GMAIL_PASS          = process.env.GMAIL_PASS;         // your app password
+const PAYPAL_EMAIL        = process.env.PAYPAL_EMAIL;       // rynxzas@gmail.com
+const FRONTEND_URL        = process.env.FRONTEND_URL;       // your Railway frontend URL
+const PAYPAL_CLIENT_ID    = process.env.PAYPAL_CLIENT_ID;   // from PayPal developer dashboard
+const PAYPAL_CLIENT_SECRET= process.env.PAYPAL_CLIENT_SECRET; // from PayPal developer dashboard
+const PAYPAL_WEBHOOK_ID   = process.env.PAYPAL_WEBHOOK_ID;  // 8X8059865A171644P
 
 // ── NODEMAILER SETUP ──
 const transporter = nodemailer.createTransport({
@@ -23,10 +26,63 @@ const transporter = nodemailer.createTransport({
 });
 
 // ── PENDING ORDERS STORE (in-memory) ──
-// Format: { [corOrderId]: { email, items, total, note } }
+// Format: { [corOrderId]: { email, items, total, paid } }
 const pendingOrders = {};
 
+// ── PAYPAL ACCESS TOKEN ──
+async function getPayPalAccessToken() {
+  const res = await axios.post(
+    'https://api-m.paypal.com/v1/oauth2/token',
+    'grant_type=client_credentials',
+    {
+      auth: {
+        username: PAYPAL_CLIENT_ID,
+        password: PAYPAL_CLIENT_SECRET,
+      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    }
+  );
+  return res.data.access_token;
+}
+
+// ── VERIFY PAYPAL WEBHOOK SIGNATURE ──
+async function verifyWebhookSignature(req, eventBody) {
+  try {
+    const accessToken = await getPayPalAccessToken();
+
+    const verifyPayload = {
+      auth_algo:         req.headers['paypal-auth-algo'],
+      cert_url:          req.headers['paypal-cert-url'],
+      transmission_id:   req.headers['paypal-transmission-id'],
+      transmission_sig:  req.headers['paypal-transmission-sig'],
+      transmission_time: req.headers['paypal-transmission-time'],
+      webhook_id:        PAYPAL_WEBHOOK_ID,
+      webhook_event:     eventBody,
+    };
+
+    const verifyRes = await axios.post(
+      'https://api-m.paypal.com/v1/notifications/verify-webhook-signature',
+      verifyPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    return verifyRes.data.verification_status === 'SUCCESS';
+  } catch (err) {
+    console.error('[WEBHOOK VERIFY ERROR]', err.message);
+    return false;
+  }
+}
+
 app.use(cors({ origin: '*' }));
+
+// ── RAW BODY for webhook verification (must be before bodyParser) ──
+app.use('/api/paypal-webhook', express.raw({ type: 'application/json' }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -55,74 +111,71 @@ app.get('/api/order-status/:orderId', (req, res) => {
   res.json({ paid: order.paid, email: order.email });
 });
 
-// ── STEP 3: PayPal IPN hits this endpoint to confirm payment ──
-app.post('/api/paypal-ipn', async (req, res) => {
-  // Immediately respond 200 to PayPal
+// ── STEP 3: PayPal Webhook hits this endpoint ──
+app.post('/api/paypal-webhook', async (req, res) => {
+  // Respond 200 immediately so PayPal doesn't retry
   res.sendStatus(200);
 
-  const ipnData = req.body;
-  console.log('[IPN RECEIVED]', ipnData);
-
-  // Send back to PayPal to verify
+  let eventBody;
   try {
-    const verifyUrl = 'https://ipnpb.paypal.com/cgi-bin/webscr';
-    const verifyBody = 'cmd=_notify-validate&' +
-      Object.entries(ipnData)
-        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-        .join('&');
-
-    const verifyRes = await axios.post(verifyUrl, verifyBody, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    });
-
-    if (verifyRes.data !== 'VERIFIED') {
-      console.log('[IPN] Not verified, ignoring.');
-      return;
-    }
-
-    // Check payment status and receiver
-    const status   = ipnData.payment_status;
-    const receiver = ipnData.receiver_email;
-    const memo     = ipnData.memo || ipnData.item_name || '';
-
-    console.log(`[IPN VERIFIED] status=${status} receiver=${receiver} memo=${memo}`);
-
-    if (status !== 'Completed') return;
-    if (receiver.toLowerCase() !== PAYPAL_EMAIL.toLowerCase()) {
-      console.log('[IPN] Wrong receiver, ignoring.');
-      return;
-    }
-
-    // Find the matching pending order by the COR- order ID in the memo
-    const match = memo.match(/COR-[A-Z0-9-]+/);
-    if (!match) {
-      console.log('[IPN] No order ID found in memo:', memo);
-      return;
-    }
-
-    const orderId = match[0];
-    const order   = pendingOrders[orderId];
-
-    if (!order) {
-      console.log('[IPN] Order not found in pending store:', orderId);
-      return;
-    }
-
-    if (order.paid) {
-      console.log('[IPN] Order already processed:', orderId);
-      return;
-    }
-
-    // Mark as paid
-    order.paid = true;
-    console.log(`[IPN] Order ${orderId} marked as PAID — sending delivery to ${order.email}`);
-
-    // Send delivery email
-    await sendDeliveryEmail(order, orderId);
-
-  } catch (err) {
-    console.error('[IPN ERROR]', err.message);
+    eventBody = JSON.parse(req.body.toString());
+  } catch (e) {
+    console.error('[WEBHOOK] Failed to parse body:', e.message);
+    return;
   }
+
+  console.log('[WEBHOOK RECEIVED] event_type:', eventBody.event_type);
+
+  // Verify the webhook signature with PayPal
+  const isValid = await verifyWebhookSignature(req, eventBody);
+  if (!isValid) {
+    console.log('[WEBHOOK] Signature verification failed — ignoring.');
+    return;
+  }
+
+  // We only care about completed payments
+  if (eventBody.event_type !== 'PAYMENT.CAPTURE.COMPLETED') {
+    console.log('[WEBHOOK] Ignoring event type:', eventBody.event_type);
+    return;
+  }
+
+  // Extract the custom_id (your COR- order ID) from the payment resource
+  const resource   = eventBody.resource || {};
+  const customId   = resource.custom_id || '';
+  const payeeEmail = resource.payee?.email_address || '';
+
+  console.log(`[WEBHOOK] custom_id=${customId} payee=${payeeEmail}`);
+
+  // Make sure the payment went to your PayPal
+  if (payeeEmail.toLowerCase() !== PAYPAL_EMAIL.toLowerCase()) {
+    console.log('[WEBHOOK] Wrong payee, ignoring.');
+    return;
+  }
+
+  // Find the matching pending order
+  const match = customId.match(/COR-[A-Z0-9-]+/);
+  if (!match) {
+    console.log('[WEBHOOK] No COR- order ID found in custom_id:', customId);
+    return;
+  }
+
+  const orderId = match[0];
+  const order   = pendingOrders[orderId];
+
+  if (!order) {
+    console.log('[WEBHOOK] Order not found:', orderId);
+    return;
+  }
+
+  if (order.paid) {
+    console.log('[WEBHOOK] Order already processed:', orderId);
+    return;
+  }
+
+  // Mark as paid and send delivery
+  order.paid = true;
+  console.log(`[WEBHOOK] Order ${orderId} marked PAID — sending delivery to ${order.email}`);
+  await sendDeliveryEmail(order, orderId);
 });
 
 // ── SEND DELIVERY EMAIL ──
