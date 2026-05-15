@@ -5,11 +5,6 @@ const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
-
-app.use(cors({
-  origin: "https://cor-market.github.io"
-}));
-
 const PORT = process.env.PORT || 3000;
 
 // ── ENV VARIABLES (set these in Railway) ──
@@ -83,7 +78,7 @@ async function verifyWebhookSignature(req, eventBody) {
   }
 }
 
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: 'https://cor-market.github.io' }));
 
 // ── RAW BODY for webhook verification (must be before bodyParser) ──
 app.use('/api/paypal-webhook', express.raw({ type: 'application/json' }));
