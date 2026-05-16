@@ -9,8 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ── CORS — must be first, before everything ──
-app.use(cors({ origin: '*' }));
-app.options('*', cors({ origin: '*' }));
+app.use(cors());
+app.options('*', cors());
 
 // ── ENV VARIABLES ──
 const GMAIL_USER           = process.env.GMAIL_USER;
