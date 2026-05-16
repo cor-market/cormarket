@@ -950,6 +950,7 @@ footer {
     <li><a href="#categories">Products</a></li>
     <li><a href="#reviews">Reviews</a></li>
     <li><a href="#faq">FAQ</a></li>
+    <li><a href="#order-lookup">My Orders</a></li>
   </ul>
   <div class="nav-right">
     <a href="https://discord.gg/cormarket" target="_blank" class="nav-btn primary" style="text-decoration:none;display:flex;align-items:center;gap:6px;font-size:13px">
@@ -1102,6 +1103,20 @@ footer {
 </section>
 
 <!-- FAQ -->
+
+<!-- ── ORDER LOOKUP ── -->
+<section class="section" id="order-lookup" style="padding-top:0">
+  <div class="section-label">Lost your order?</div>
+  <h2 class="section-title">Look Up Your Order</h2>
+  <p class="section-sub">Enter your Order ID and email to see your order details.</p>
+  <div style="max-width:480px;margin:2rem auto 0">
+    <input id="lookup-orderid" type="text" placeholder="Order ID (e.g. COR-XXXX-XXXX)" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);font-family:var(--font-mono);font-size:14px;margin-bottom:10px;outline:none">
+    <input id="lookup-email" type="email" placeholder="Your email address" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);font-family:var(--font-body);font-size:14px;margin-bottom:10px;outline:none">
+    <button onclick="lookupOrder()" style="width:100%;padding:13px;background:linear-gradient(135deg,#f72585,#b5179e);border:none;border-radius:var(--radius-sm);color:#fff;font-family:var(--font-display);font-size:15px;font-weight:700;cursor:pointer">Look Up Order</button>
+    <div id="lookup-result" style="margin-top:1rem"></div>
+  </div>
+</section>
+
 <section class="section" id="faq">
   <div class="section-label">FAQ</div>
   <h2 class="section-title">Got a question?<br>We've got answers.</h2>
@@ -1161,6 +1176,7 @@ footer {
         <li><a href="#categories">Products</a></li>
         <li><a href="#reviews">Reviews</a></li>
         <li><a href="#faq">FAQ</a></li>
+    <li><a href="#order-lookup">My Orders</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -1218,181 +1234,181 @@ footer {
 // ── PRODUCTS ──
 const products = [
   // Discord
-  { id:1,   name:'FA Discord – Email Verified',                    desc:'Fresh Discord account, email verified.',                                         icon:'💬', price:0.03,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:2,   name:'FA Discord – Email + Phone Verified',            desc:'Fresh Discord account, email and phone verified.',                               icon:'💬', price:0.06,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:3,   name:'FA Discord – 3+ Months Aged',                    desc:'3+ months aged Discord account, email + phone verified.',                        icon:'💬', price:0.15,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:4,   name:'FA Discord – 2023 Account',                      desc:'2023 aged Discord account.',                                                     icon:'💬', price:0.30,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:5,   name:'FA Discord – 2021 Account',                      desc:'2021 aged Discord account.',                                                     icon:'💬', price:0.55,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:6,   name:'FA Discord – 2020 Account',                      desc:'2020 aged Discord account.',                                                     icon:'💬', price:0.90,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:7,   name:'FA Discord – 2019 Account',                      desc:'2019 aged Discord account.',                                                     icon:'💬', price:1.90,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:8,   name:'FA Discord – 2018 Account',                      desc:'2018 aged Discord account.',                                                     icon:'💬', price:2.45,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:9,   name:'FA Discord – 2017 Account',                      desc:'2017 aged Discord account.',                                                     icon:'💬', price:3.65,  category:'Discord',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:10,  name:'FA Discord – 2016 Account',                      desc:'2016 aged Discord account.',                                                     icon:'💬', price:7.85,  category:'Discord',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:11,  name:'Discord – 1 Month Nitro + 2 Boosts',             desc:'1 month Nitro + 2 boosts + phone verified Discord account.',                     icon:'💜', price:1.25,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:12,  name:'Discord – 3 Month Nitro + 2 Boosts',             desc:'3 month Nitro + 2 boosts + phone verified Discord account.',                     icon:'💜', price:3.80,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:13,  name:'Discord Nitro Boost Gift Link',                   desc:'Discord Nitro boost gift link. 1 boost included.',                               icon:'💜', price:4.50,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:14,  name:'Discord Generator [Lifetime]',                    desc:'Lifetime access to Discord account generator.',                                  icon:'⚙', price:30.00, category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:1,   name:'FA Discord – Email Verified',                    desc:'Fresh Discord account, email verified.',                                         icon:'💬', price:0.04,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:2,   name:'FA Discord – Email + Phone Verified',            desc:'Fresh Discord account, email and phone verified.',                               icon:'💬', price:0.07,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:3,   name:'FA Discord – 3+ Months Aged',                    desc:'3+ months aged Discord account, email + phone verified.',                        icon:'💬', price:0.18,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:4,   name:'FA Discord – 2023 Account',                      desc:'2023 aged Discord account.',                                                     icon:'💬', price:0.37,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:5,   name:'FA Discord – 2021 Account',                      desc:'2021 aged Discord account.',                                                     icon:'💬', price:0.67,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:6,   name:'FA Discord – 2020 Account',                      desc:'2020 aged Discord account.',                                                     icon:'💬', price:1.1,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:7,   name:'FA Discord – 2019 Account',                      desc:'2019 aged Discord account.',                                                     icon:'💬', price:2.32,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:8,   name:'FA Discord – 2018 Account',                      desc:'2018 aged Discord account.',                                                     icon:'💬', price:2.99,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:9,   name:'FA Discord – 2017 Account',                      desc:'2017 aged Discord account.',                                                     icon:'💬', price:4.45,  category:'Discord',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:10,  name:'FA Discord – 2016 Account',                      desc:'2016 aged Discord account.',                                                     icon:'💬', price:9.58,  category:'Discord',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:11,  name:'Discord – 1 Month Nitro + 2 Boosts',             desc:'1 month Nitro + 2 boosts + phone verified Discord account.',                     icon:'💜', price:1.52,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:12,  name:'Discord – 3 Month Nitro + 2 Boosts',             desc:'3 month Nitro + 2 boosts + phone verified Discord account.',                     icon:'💜', price:4.64,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:13,  name:'Discord Nitro Boost Gift Link',                   desc:'Discord Nitro boost gift link. 1 boost included.',                               icon:'💜', price:5.49,  category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:14,  name:'Discord Generator [Lifetime]',                    desc:'Lifetime access to Discord account generator.',                                  icon:'⚙', price:36.6, category:'Discord',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Social
-  { id:20,  name:'YouTube Lifetime Accounts',                       desc:'Lifetime YouTube account.',                                                      icon:'📺', price:0.85,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:21,  name:'TikTok Accounts 1k+ Followers',                   desc:'TikTok account with 1,000+ followers.',                                          icon:'🎵', price:3.80,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:22,  name:'TikTok Accounts 10k+ Followers',                  desc:'TikTok account with 10,000+ followers.',                                         icon:'🎵', price:17.75, category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:23,  name:'TikTok Accounts 20k+ Followers',                  desc:'TikTok account with 20,000+ followers.',                                         icon:'🎵', price:29.50, category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:24,  name:'Instagram 1k+ Followers',                         desc:'Instagram account with 1,000+ followers.',                                       icon:'📸', price:3.80,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:25,  name:'Instagram 5k+ Followers',                         desc:'Instagram account with 5,000+ followers.',                                       icon:'📸', price:8.50,  category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:26,  name:'FA Twitch – Fresh Account',                       desc:'Fresh full access Twitch account.',                                              icon:'🟣', price:0.03,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:27,  name:'FA Twitch – 500+ Followers',                      desc:'Full access Twitch account with 500+ followers.',                                icon:'🟣', price:0.50,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:28,  name:'FA Twitch – 2000+ Followers',                     desc:'Full access Twitch account with 2,000+ followers.',                              icon:'🟣', price:1.75,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:29,  name:'FA Twitch – 5000+ Followers',                     desc:'Full access Twitch account with 5,000+ followers.',                              icon:'🟣', price:4.75,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:30,  name:'FA Twitch – 10,000+ Followers',                   desc:'Full access Twitch account with 10,000+ followers.',                             icon:'🟣', price:9.50,  category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:20,  name:'YouTube Lifetime Accounts',                       desc:'Lifetime YouTube account.',                                                      icon:'📺', price:1.04,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:21,  name:'TikTok Accounts 1k+ Followers',                   desc:'TikTok account with 1,000+ followers.',                                          icon:'🎵', price:4.64,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:22,  name:'TikTok Accounts 10k+ Followers',                  desc:'TikTok account with 10,000+ followers.',                                         icon:'🎵', price:21.66, category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:23,  name:'TikTok Accounts 20k+ Followers',                  desc:'TikTok account with 20,000+ followers.',                                         icon:'🎵', price:35.99, category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:24,  name:'Instagram 1k+ Followers',                         desc:'Instagram account with 1,000+ followers.',                                       icon:'📸', price:4.64,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:25,  name:'Instagram 5k+ Followers',                         desc:'Instagram account with 5,000+ followers.',                                       icon:'📸', price:10.37,  category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:26,  name:'FA Twitch – Fresh Account',                       desc:'Fresh full access Twitch account.',                                              icon:'🟣', price:0.04,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:27,  name:'FA Twitch – 500+ Followers',                      desc:'Full access Twitch account with 500+ followers.',                                icon:'🟣', price:0.61,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:28,  name:'FA Twitch – 2000+ Followers',                     desc:'Full access Twitch account with 2,000+ followers.',                              icon:'🟣', price:2.13,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:29,  name:'FA Twitch – 5000+ Followers',                     desc:'Full access Twitch account with 5,000+ followers.',                              icon:'🟣', price:5.79,  category:'Social',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:30,  name:'FA Twitch – 10,000+ Followers',                   desc:'Full access Twitch account with 10,000+ followers.',                             icon:'🟣', price:11.59,  category:'Social',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Streaming
-  { id:40,  name:'Netflix Lifetime',                                desc:'Netflix non-full-access lifetime account.',                                      icon:'🎬', price:0.10,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:41,  name:'Disney+ Lifetime NFA',                            desc:'Disney+ non-full-access lifetime account.',                                      icon:'🎬', price:0.06,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:42,  name:'Paramount+ USA',                                  desc:'Paramount+ account, US region.',                                                 icon:'🎬', price:0.10,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:43,  name:'Paramount+ EU',                                   desc:'Paramount+ account, EU region.',                                                 icon:'🎬', price:0.15,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:44,  name:'Spotify Lifetime Account',                        desc:'Spotify lifetime account. Ad-free music forever.',                               icon:'🎵', price:2.35,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:45,  name:'Spotify Lifetime Key',                            desc:'Spotify lifetime key.',                                                          icon:'🎵', price:4.80,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:46,  name:'HBO Max Lifetime',                                desc:'HBO Max non-full-access lifetime account.',                                      icon:'🎬', price:0.10,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:47,  name:'Crunchyroll Mega Fan Lifetime',                   desc:'Crunchyroll Mega Fan Member lifetime account.',                                  icon:'🎬', price:0.10,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:48,  name:'Prime Video Lifetime',                            desc:'Amazon Prime Video lifetime account.',                                           icon:'🎬', price:0.85,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:49,  name:'Dazn Lifetime',                                   desc:'Dazn lifetime streaming account.',                                               icon:'🎬', price:0.15,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:50,  name:'AMC+ Lifetime',                                   desc:'AMC+ lifetime account.',                                                         icon:'🎬', price:0.10,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:51,  name:'UFC Lifetime',                                    desc:'UFC lifetime account.',                                                          icon:'🎬', price:0.45,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:52,  name:'NBA Lifetime',                                    desc:'NBA lifetime account.',                                                          icon:'🎬', price:0.05,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:53,  name:'Duolingo Lifetime',                               desc:'Duolingo lifetime account.',                                                     icon:'🎬', price:0.05,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:54,  name:'Capcut Pro Lifetime',                             desc:'Capcut Pro lifetime account.',                                                   icon:'🎬', price:0.20,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:55,  name:'Wondershare Lifetime',                            desc:'Wondershare lifetime account.',                                                  icon:'🎬', price:0.10,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:56,  name:'Movistar.es+ Lifetime',                           desc:'Movistar+ lifetime account.',                                                    icon:'🎬', price:0.65,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:57,  name:'Oneplay Lifetime',                                desc:'Oneplay lifetime account.',                                                      icon:'🎬', price:0.45,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:40,  name:'Netflix Lifetime',                                desc:'Netflix non-full-access lifetime account.',                                      icon:'🎬', price:0.12,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:41,  name:'Disney+ Lifetime NFA',                            desc:'Disney+ non-full-access lifetime account.',                                      icon:'🎬', price:0.07,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:42,  name:'Paramount+ USA',                                  desc:'Paramount+ account, US region.',                                                 icon:'🎬', price:0.12,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:43,  name:'Paramount+ EU',                                   desc:'Paramount+ account, EU region.',                                                 icon:'🎬', price:0.18,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:44,  name:'Spotify Lifetime Account',                        desc:'Spotify lifetime account. Ad-free music forever.',                               icon:'🎵', price:2.87,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:45,  name:'Spotify Lifetime Key',                            desc:'Spotify lifetime key.',                                                          icon:'🎵', price:5.86,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:46,  name:'HBO Max Lifetime',                                desc:'HBO Max non-full-access lifetime account.',                                      icon:'🎬', price:0.12,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:47,  name:'Crunchyroll Mega Fan Lifetime',                   desc:'Crunchyroll Mega Fan Member lifetime account.',                                  icon:'🎬', price:0.12,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:48,  name:'Prime Video Lifetime',                            desc:'Amazon Prime Video lifetime account.',                                           icon:'🎬', price:1.04,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:49,  name:'Dazn Lifetime',                                   desc:'Dazn lifetime streaming account.',                                               icon:'🎬', price:0.18,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:50,  name:'AMC+ Lifetime',                                   desc:'AMC+ lifetime account.',                                                         icon:'🎬', price:0.12,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:51,  name:'UFC Lifetime',                                    desc:'UFC lifetime account.',                                                          icon:'🎬', price:0.55,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:52,  name:'NBA Lifetime',                                    desc:'NBA lifetime account.',                                                          icon:'🎬', price:0.06,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:53,  name:'Duolingo Lifetime',                               desc:'Duolingo lifetime account.',                                                     icon:'🎬', price:0.06,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:54,  name:'Capcut Pro Lifetime',                             desc:'Capcut Pro lifetime account.',                                                   icon:'🎬', price:0.24,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:55,  name:'Wondershare Lifetime',                            desc:'Wondershare lifetime account.',                                                  icon:'🎬', price:0.12,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:56,  name:'Movistar.es+ Lifetime',                           desc:'Movistar+ lifetime account.',                                                    icon:'🎬', price:0.79,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:57,  name:'Oneplay Lifetime',                                desc:'Oneplay lifetime account.',                                                      icon:'🎬', price:0.55,  category:'Streaming', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // VPN
-  { id:60,  name:'NordVPN Lifetime',                                desc:'NordVPN lifetime account.',                                                      icon:'🛡', price:0.20,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:61,  name:'CyberGhost VPN 1 Year',                           desc:'CyberGhost VPN account valid for 1 year.',                                       icon:'🛡', price:0.35,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:62,  name:'IP Vanish VPN 1 Year',                            desc:'IP Vanish VPN account valid for 1 year.',                                        icon:'🛡', price:0.10,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:63,  name:'Pure VPN',                                        desc:'Pure VPN account.',                                                              icon:'🛡', price:0.50,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:64,  name:'Mullvad VPN Lifetime',                            desc:'Mullvad VPN lifetime account.',                                                  icon:'🛡', price:3.50,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:65,  name:'HotSpot Shield VPN 1 Year',                       desc:'HotSpot Shield VPN account valid for 1 year.',                                   icon:'🛡', price:1.00,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:66,  name:'TunnelBear VPN',                                  desc:'TunnelBear VPN account.',                                                        icon:'🛡', price:0.18,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:67,  name:'VPN Generator [Lifetime]',                        desc:'Lifetime VPN account generator access.',                                         icon:'🛡', price:10.00, category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:60,  name:'NordVPN Lifetime',                                desc:'NordVPN lifetime account.',                                                      icon:'🛡', price:0.24,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:61,  name:'CyberGhost VPN 1 Year',                           desc:'CyberGhost VPN account valid for 1 year.',                                       icon:'🛡', price:0.43,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:62,  name:'IP Vanish VPN 1 Year',                            desc:'IP Vanish VPN account valid for 1 year.',                                        icon:'🛡', price:0.12,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:63,  name:'Pure VPN',                                        desc:'Pure VPN account.',                                                              icon:'🛡', price:0.61,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:64,  name:'Mullvad VPN Lifetime',                            desc:'Mullvad VPN lifetime account.',                                                  icon:'🛡', price:4.27,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:65,  name:'HotSpot Shield VPN 1 Year',                       desc:'HotSpot Shield VPN account valid for 1 year.',                                   icon:'🛡', price:1.22,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:66,  name:'TunnelBear VPN',                                  desc:'TunnelBear VPN account.',                                                        icon:'🛡', price:0.22,  category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:67,  name:'VPN Generator [Lifetime]',                        desc:'Lifetime VPN account generator access.',                                         icon:'🛡', price:12.2, category:'VPN',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Fortnite
-  { id:70,  name:'Fortnite 3-10 Skins [Ranked Ready]',              desc:'Full access Fortnite account with 3–10 skins. Ranked ready.',                   icon:'🎮', price:0.35,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:71,  name:'Fortnite 10-20 Skins [Ranked Ready]',             desc:'Full access Fortnite account with 10–20 skins. Ranked ready.',                  icon:'🎮', price:0.75,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:72,  name:'Fortnite 20-50 Skins [Ranked Ready]',             desc:'Full access Fortnite account with 20–50 skins. Ranked ready.',                  icon:'🎮', price:1.50,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:73,  name:'Fortnite 50-100 Skins [OG Outfits]',              desc:'Account with 50–100 skins, OG outfits included.',                               icon:'🎮', price:2.75,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:74,  name:'Fortnite 100-150 Skins [OG Outfits]',             desc:'Account with 100–150 skins, OG outfits included.',                              icon:'🎮', price:5.50,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:75,  name:'Fortnite 150-250 Skins [OG Outfits]',             desc:'Account with 150–250 skins, OG outfits included.',                              icon:'🎮', price:7.50,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:76,  name:'Fortnite 100-250 [Tryhard Skins Only]',           desc:'Account with 100–250 tryhard skins only.',                                       icon:'🎮', price:8.55,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:77,  name:'Fortnite OG STW + 100-200 Skins',                 desc:'OG Save The World + 100–200 skins, 20% OG Skull Trooper.',                      icon:'🎮', price:9.85,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:78,  name:'Fortnite Leviathan Axe + 100-200 Skins',          desc:'Leviathan Axe + 100–200 skins Fortnite account.',                               icon:'🎮', price:12.50, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:79,  name:'Fortnite 250-400 Skins [OG Outfits]',             desc:'Account with 250–400 skins, OG outfits included.',                              icon:'🎮', price:12.50, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:80,  name:'Fortnite Minty Axe + 100-250 Skins',              desc:'Minty Axe + 100–250 skins, OG outfits included.',                               icon:'🎮', price:16.25, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:81,  name:'Fortnite Travis Scott + 100-250 Skins',           desc:'Travis Scott + 100–250 skins, OG outfits included.',                            icon:'🎮', price:25.00, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:82,  name:'Fortnite 400-600 Skins [OG Outfits]',             desc:'Account with 400–600 skins, OG outfits included.',                              icon:'🎮', price:28.50, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:83,  name:'Fortnite Black Knight + 50-250 Skins',            desc:'Black Knight + 50–250 skins, most OG outfits included.',                        icon:'🎮', price:55.00, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:84,  name:'Fortnite V-Bucks 800-1200',                       desc:'Fortnite account pre-loaded with 800–1200 V-Bucks.',                            icon:'💜', price:2.50,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:85,  name:'Fortnite V-Bucks 1,500-2,800',                    desc:'Fortnite account pre-loaded with 1,500–2,800 V-Bucks.',                         icon:'💜', price:5.00,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:86,  name:'Fortnite V-Bucks 5,000-7,000',                    desc:'Fortnite account pre-loaded with 5,000–7,000 V-Bucks.',                         icon:'💜', price:13.50, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:87,  name:'Epic Games Email Changer',                         desc:'Change your Epic Games account email.',                                          icon:'🎮', price:4.50,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:70,  name:'Fortnite 3-10 Skins [Ranked Ready]',              desc:'Full access Fortnite account with 3–10 skins. Ranked ready.',                   icon:'🎮', price:0.43,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:71,  name:'Fortnite 10-20 Skins [Ranked Ready]',             desc:'Full access Fortnite account with 10–20 skins. Ranked ready.',                  icon:'🎮', price:0.92,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:72,  name:'Fortnite 20-50 Skins [Ranked Ready]',             desc:'Full access Fortnite account with 20–50 skins. Ranked ready.',                  icon:'🎮', price:1.83,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:73,  name:'Fortnite 50-100 Skins [OG Outfits]',              desc:'Account with 50–100 skins, OG outfits included.',                               icon:'🎮', price:3.35,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:74,  name:'Fortnite 100-150 Skins [OG Outfits]',             desc:'Account with 100–150 skins, OG outfits included.',                              icon:'🎮', price:6.71,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:75,  name:'Fortnite 150-250 Skins [OG Outfits]',             desc:'Account with 150–250 skins, OG outfits included.',                              icon:'🎮', price:9.15,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:76,  name:'Fortnite 100-250 [Tryhard Skins Only]',           desc:'Account with 100–250 tryhard skins only.',                                       icon:'🎮', price:10.43,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:77,  name:'Fortnite OG STW + 100-200 Skins',                 desc:'OG Save The World + 100–200 skins, 20% OG Skull Trooper.',                      icon:'🎮', price:12.02,  category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:78,  name:'Fortnite Leviathan Axe + 100-200 Skins',          desc:'Leviathan Axe + 100–200 skins Fortnite account.',                               icon:'🎮', price:15.25, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:79,  name:'Fortnite 250-400 Skins [OG Outfits]',             desc:'Account with 250–400 skins, OG outfits included.',                              icon:'🎮', price:15.25, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:80,  name:'Fortnite Minty Axe + 100-250 Skins',              desc:'Minty Axe + 100–250 skins, OG outfits included.',                               icon:'🎮', price:19.82, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:81,  name:'Fortnite Travis Scott + 100-250 Skins',           desc:'Travis Scott + 100–250 skins, OG outfits included.',                            icon:'🎮', price:30.5, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:82,  name:'Fortnite 400-600 Skins [OG Outfits]',             desc:'Account with 400–600 skins, OG outfits included.',                              icon:'🎮', price:34.77, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:83,  name:'Fortnite Black Knight + 50-250 Skins',            desc:'Black Knight + 50–250 skins, most OG outfits included.',                        icon:'🎮', price:67.1, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:84,  name:'Fortnite V-Bucks 800-1200',                       desc:'Fortnite account pre-loaded with 800–1200 V-Bucks.',                            icon:'💜', price:3.05,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:85,  name:'Fortnite V-Bucks 1,500-2,800',                    desc:'Fortnite account pre-loaded with 1,500–2,800 V-Bucks.',                         icon:'💜', price:6.1,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:86,  name:'Fortnite V-Bucks 5,000-7,000',                    desc:'Fortnite account pre-loaded with 5,000–7,000 V-Bucks.',                         icon:'💜', price:16.47, category:'Fortnite',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:87,  name:'Epic Games Email Changer',                         desc:'Change your Epic Games account email.',                                          icon:'🎮', price:5.49,  category:'Fortnite',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Valorant
-  { id:90,  name:'Valorant EU Level 1-20 [Ranked Ready]',           desc:'EU region Valorant account, level 1–20, ranked ready.',                        icon:'🔴', price:3.75,  category:'Valorant',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:91,  name:'Valorant EU Level 1-20 [Knife + Skins] 1k-3k VP', desc:'EU Lv 1–20 with knife + skins, 1,000–3,000 VP inventory.',                    icon:'🔴', price:8.50,  category:'Valorant',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:92,  name:'Valorant EU Level 20-40 [Knife + Skins] 2k-5k VP',desc:'EU Lv 20–40 with knife + skins, 2,000–5,000 VP inventory.',                   icon:'🔴', price:10.75, category:'Valorant',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:93,  name:'Valorant EU Level 40-100 [Knife + Skins] 3k-10k VP',desc:'EU Lv 40–100 with knife + skins, 3,000–10,000 VP inventory.',               icon:'🔴', price:15.25, category:'Valorant',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:94,  name:'Valorant EU Level 50-200 [Knife + Skins] 5k-20k VP',desc:'EU Lv 50–200 with knife + skins, 5,000–20,000 VP inventory.',               icon:'🔴', price:22.50, category:'Valorant',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:95,  name:'Valorant EU Level 100-300 [Knife + Skins] 30k-55k VP',desc:'EU Lv 100–300 with knife + skins, 30,000–55,000 VP inventory.',           icon:'🔴', price:35.00, category:'Valorant',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:90,  name:'Valorant EU Level 1-20 [Ranked Ready]',           desc:'EU region Valorant account, level 1–20, ranked ready.',                        icon:'🔴', price:4.58,  category:'Valorant',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:91,  name:'Valorant EU Level 1-20 [Knife + Skins] 1k-3k VP', desc:'EU Lv 1–20 with knife + skins, 1,000–3,000 VP inventory.',                    icon:'🔴', price:10.37,  category:'Valorant',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:92,  name:'Valorant EU Level 20-40 [Knife + Skins] 2k-5k VP',desc:'EU Lv 20–40 with knife + skins, 2,000–5,000 VP inventory.',                   icon:'🔴', price:13.12, category:'Valorant',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:93,  name:'Valorant EU Level 40-100 [Knife + Skins] 3k-10k VP',desc:'EU Lv 40–100 with knife + skins, 3,000–10,000 VP inventory.',               icon:'🔴', price:18.61, category:'Valorant',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:94,  name:'Valorant EU Level 50-200 [Knife + Skins] 5k-20k VP',desc:'EU Lv 50–200 with knife + skins, 5,000–20,000 VP inventory.',               icon:'🔴', price:27.45, category:'Valorant',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:95,  name:'Valorant EU Level 100-300 [Knife + Skins] 30k-55k VP',desc:'EU Lv 100–300 with knife + skins, 30,000–55,000 VP inventory.',           icon:'🔴', price:42.7, category:'Valorant',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // CS2
-  { id:100, name:'CS2 Prime NFA Account',                           desc:'CS2 prime non-full-access account.',                                             icon:'🟡', price:0.95,  category:'CS2',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:101, name:'CS2 Prime Account (0-300 Hrs) 0-2 Medals',        desc:'CS2 prime account with 0–300 hours and 0–2 medals.',                            icon:'🟡', price:8.85,  category:'CS2',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:102, name:'CS2 Prime Account (1100-4000 Hrs) 6-8 Medals',    desc:'CS2 prime account with 1,100–4,000 hours and 6–8 medals.',                     icon:'🟡', price:19.50, category:'CS2',       badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:103, name:'CS2 Account 5000+ Hours',                         desc:'CS2 account with 5,000+ hours played.',                                          icon:'🟡', price:2.25,  category:'CS2',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:104, name:'CS2 Account 10000+ Hours',                        desc:'CS2 account with 10,000+ hours played.',                                         icon:'🟡', price:4.50,  category:'CS2',       badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:100, name:'CS2 Prime NFA Account',                           desc:'CS2 prime non-full-access account.',                                             icon:'🟡', price:1.16,  category:'CS2',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:101, name:'CS2 Prime Account (0-300 Hrs) 0-2 Medals',        desc:'CS2 prime account with 0–300 hours and 0–2 medals.',                            icon:'🟡', price:10.8,  category:'CS2',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:102, name:'CS2 Prime Account (1100-4000 Hrs) 6-8 Medals',    desc:'CS2 prime account with 1,100–4,000 hours and 6–8 medals.',                     icon:'🟡', price:23.79, category:'CS2',       badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:103, name:'CS2 Account 5000+ Hours',                         desc:'CS2 account with 5,000+ hours played.',                                          icon:'🟡', price:2.75,  category:'CS2',       badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:104, name:'CS2 Account 10000+ Hours',                        desc:'CS2 account with 10,000+ hours played.',                                         icon:'🟡', price:5.49,  category:'CS2',       badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Rainbow Six Siege
-  { id:110, name:'Rainbow Six Siege 10-50 Level',                   desc:'Rainbow Six Siege account, level 10–50.',                                        icon:'🌈', price:3.50,  category:'R6Siege',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:111, name:'Rainbow Six Siege 100-300 Level [100+ Skins]',    desc:'Rainbow Six Siege account, level 100–300 with 100+ skins.',                    icon:'🌈', price:24.50, category:'R6Siege',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:110, name:'Rainbow Six Siege 10-50 Level',                   desc:'Rainbow Six Siege account, level 10–50.',                                        icon:'🌈', price:4.27,  category:'R6Siege',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:111, name:'Rainbow Six Siege 100-300 Level [100+ Skins]',    desc:'Rainbow Six Siege account, level 100–300 with 100+ skins.',                    icon:'🌈', price:29.89, category:'R6Siege',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Apex Legends
-  { id:120, name:'Apex Legends Level 20-100 [Ranked Ready]',        desc:'Apex Legends account, level 20–100, ranked ready.',                             icon:'🟠', price:4.05,  category:'Apex',      badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:121, name:'Apex Legends Level 100-300 [Ranked Ready]',       desc:'Apex Legends account, level 100–300, ranked ready.',                            icon:'🟠', price:12.50, category:'Apex',      badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:122, name:'Apex Legends Level 300-500 [Ranked Ready]',       desc:'Apex Legends account, level 300–500, ranked ready.',                            icon:'🟠', price:22.00, category:'Apex',      badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:120, name:'Apex Legends Level 20-100 [Ranked Ready]',        desc:'Apex Legends account, level 20–100, ranked ready.',                             icon:'🟠', price:4.94,  category:'Apex',      badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:121, name:'Apex Legends Level 100-300 [Ranked Ready]',       desc:'Apex Legends account, level 100–300, ranked ready.',                            icon:'🟠', price:15.25, category:'Apex',      badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:122, name:'Apex Legends Level 300-500 [Ranked Ready]',       desc:'Apex Legends account, level 300–500, ranked ready.',                            icon:'🟠', price:26.84, category:'Apex',      badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Minecraft
-  { id:130, name:'Minecraft Full Access Account',                   desc:'Full access Minecraft Java account. Change username and skin.',                  icon:'🟩', price:2.35,  category:'Minecraft', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:130, name:'Minecraft Full Access Account',                   desc:'Full access Minecraft Java account. Change username and skin.',                  icon:'🟩', price:2.87,  category:'Minecraft', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Roblox
-  { id:140, name:'Roblox 1,000-2,500 Robux',                        desc:'Roblox Robux top-up: 1,000–2,500 Robux.',                                       icon:'⬛', price:2.95,  category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:141, name:'Roblox 2,500-5,000 Robux',                        desc:'Roblox Robux top-up: 2,500–5,000 Robux.',                                       icon:'⬛', price:4.50,  category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:142, name:'Roblox 5,000-10,000 Robux',                       desc:'Roblox Robux top-up: 5,000–10,000 Robux.',                                      icon:'⬛', price:7.50,  category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:143, name:'Roblox 10,000-15,000 Robux',                      desc:'Roblox Robux top-up: 10,000–15,000 Robux.',                                     icon:'⬛', price:10.50, category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:144, name:'Roblox 15,000-25,000 Robux',                      desc:'Roblox Robux top-up: 15,000–25,000 Robux.',                                     icon:'⬛', price:13.25, category:'Roblox',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:145, name:'Roblox 25,000-50,000 Robux',                      desc:'Roblox Robux top-up: 25,000–50,000 Robux.',                                     icon:'⬛', price:18.50, category:'Roblox',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:140, name:'Roblox 1,000-2,500 Robux',                        desc:'Roblox Robux top-up: 1,000–2,500 Robux.',                                       icon:'⬛', price:3.6,  category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:141, name:'Roblox 2,500-5,000 Robux',                        desc:'Roblox Robux top-up: 2,500–5,000 Robux.',                                       icon:'⬛', price:5.49,  category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:142, name:'Roblox 5,000-10,000 Robux',                       desc:'Roblox Robux top-up: 5,000–10,000 Robux.',                                      icon:'⬛', price:9.15,  category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:143, name:'Roblox 10,000-15,000 Robux',                      desc:'Roblox Robux top-up: 10,000–15,000 Robux.',                                     icon:'⬛', price:12.81, category:'Roblox',    badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:144, name:'Roblox 15,000-25,000 Robux',                      desc:'Roblox Robux top-up: 15,000–25,000 Robux.',                                     icon:'⬛', price:16.16, category:'Roblox',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:145, name:'Roblox 25,000-50,000 Robux',                      desc:'Roblox Robux top-up: 25,000–50,000 Robux.',                                     icon:'⬛', price:22.57, category:'Roblox',    badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Rust
-  { id:150, name:'Rust NFA Account',                                desc:'Rust non-full-access account.',                                                  icon:'🟤', price:0.90,  category:'Rust',      badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:151, name:'Rust Full Access Account',                        desc:'Full access Rust Steam account.',                                                icon:'🟤', price:6.80,  category:'Rust',      badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:150, name:'Rust NFA Account',                                desc:'Rust non-full-access account.',                                                  icon:'🟤', price:1.1,  category:'Rust',      badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:151, name:'Rust Full Access Account',                        desc:'Full access Rust Steam account.',                                                icon:'🟤', price:8.3,  category:'Rust',      badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // FiveM
-  { id:160, name:'FiveM Ready [Fresh]',                             desc:'Fresh FiveM ready account.',                                                     icon:'🔵', price:0.10,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:161, name:'FiveM Spoofer [1 Day]',                           desc:'HWID spoofer for FiveM. 1 day duration.',                                        icon:'🔵', price:1.65,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:162, name:'FiveM Spoofer [7 Days]',                          desc:'HWID spoofer for FiveM. 7 day duration.',                                        icon:'🔵', price:4.25,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:163, name:'FiveM Spoofer [30 Days]',                         desc:'HWID spoofer for FiveM. 30 day duration.',                                       icon:'🔵', price:8.45,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:164, name:'FiveM Spoofer [Lifetime]',                        desc:'Lifetime HWID spoofer for FiveM.',                                               icon:'🔵', price:19.90, category:'FiveM',     badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:165, name:'FiveM Bundle',                                    desc:'FiveM bundle package.',                                                          icon:'🔵', price:0.20,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:160, name:'FiveM Ready [Fresh]',                             desc:'Fresh FiveM ready account.',                                                     icon:'🔵', price:0.12,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:161, name:'FiveM Spoofer [1 Day]',                           desc:'HWID spoofer for FiveM. 1 day duration.',                                        icon:'🔵', price:2.01,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:162, name:'FiveM Spoofer [7 Days]',                          desc:'HWID spoofer for FiveM. 7 day duration.',                                        icon:'🔵', price:5.18,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:163, name:'FiveM Spoofer [30 Days]',                         desc:'HWID spoofer for FiveM. 30 day duration.',                                       icon:'🔵', price:10.31,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:164, name:'FiveM Spoofer [Lifetime]',                        desc:'Lifetime HWID spoofer for FiveM.',                                               icon:'🔵', price:24.28, category:'FiveM',     badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:165, name:'FiveM Bundle',                                    desc:'FiveM bundle package.',                                                          icon:'🔵', price:0.24,  category:'FiveM',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Spoofers
-  { id:170, name:'Permanent Spoofer [All Games] – Onetime',         desc:'One-time use permanent spoofer for all games.',                                  icon:'🖥', price:4.50,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:171, name:'Permanent Spoofer [All Games] – Lifetime',        desc:'Lifetime permanent spoofer for all games.',                                      icon:'🖥', price:9.90,  category:'Spoofers',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:172, name:'Temporary Spoofer [All Games] – 1 Day',           desc:'1 day temporary spoofer for all games.',                                         icon:'🖥', price:0.50,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:173, name:'Temporary Spoofer [All Games] – 7 Days',          desc:'7 day temporary spoofer for all games.',                                         icon:'🖥', price:3.00,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:174, name:'Temporary Spoofer [All Games] – 31 Days',         desc:'31 day temporary spoofer for all games.',                                        icon:'🖥', price:6.00,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:175, name:'Temporary Spoofer [All Games] – Lifetime',        desc:'Lifetime temporary spoofer for all games.',                                      icon:'🖥', price:11.50, category:'Spoofers',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:176, name:'Lusive Ultimate Software – 1 Day',                desc:'1 day key for Lusive Ultimate Software.',                                        icon:'🖥', price:0.50,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:177, name:'Lusive Ultimate Software – 1 Week',               desc:'1 week key for Lusive Ultimate Software.',                                       icon:'🖥', price:3.00,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:178, name:'Lusive Ultimate Software – 1 Month',              desc:'1 month key for Lusive Ultimate Software.',                                      icon:'🖥', price:6.50,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:179, name:'Lusive Ultimate Software – Lifetime',             desc:'Lifetime key for Lusive Ultimate Software.',                                     icon:'🖥', price:12.50, category:'Spoofers',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:170, name:'Permanent Spoofer [All Games] – Onetime',         desc:'One-time use permanent spoofer for all games.',                                  icon:'🖥', price:5.49,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:171, name:'Permanent Spoofer [All Games] – Lifetime',        desc:'Lifetime permanent spoofer for all games.',                                      icon:'🖥', price:12.08,  category:'Spoofers',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:172, name:'Temporary Spoofer [All Games] – 1 Day',           desc:'1 day temporary spoofer for all games.',                                         icon:'🖥', price:0.61,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:173, name:'Temporary Spoofer [All Games] – 7 Days',          desc:'7 day temporary spoofer for all games.',                                         icon:'🖥', price:3.66,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:174, name:'Temporary Spoofer [All Games] – 31 Days',         desc:'31 day temporary spoofer for all games.',                                        icon:'🖥', price:7.32,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:175, name:'Temporary Spoofer [All Games] – Lifetime',        desc:'Lifetime temporary spoofer for all games.',                                      icon:'🖥', price:14.03, category:'Spoofers',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:176, name:'Lusive Ultimate Software – 1 Day',                desc:'1 day key for Lusive Ultimate Software.',                                        icon:'🖥', price:0.61,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:177, name:'Lusive Ultimate Software – 1 Week',               desc:'1 week key for Lusive Ultimate Software.',                                       icon:'🖥', price:3.66,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:178, name:'Lusive Ultimate Software – 1 Month',              desc:'1 month key for Lusive Ultimate Software.',                                      icon:'🖥', price:7.93,  category:'Spoofers',  badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:179, name:'Lusive Ultimate Software – Lifetime',             desc:'Lifetime key for Lusive Ultimate Software.',                                     icon:'🖥', price:15.25, category:'Spoofers',  badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Generators
-  { id:180, name:'Accounts Generator – Week',                       desc:'1 week access to accounts generator.',                                           icon:'⚙', price:15.50, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:181, name:'Accounts Generator – Month',                      desc:'1 month access to accounts generator.',                                          icon:'⚙', price:25.00, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:182, name:'Accounts Generator – Lifetime',                   desc:'Lifetime access to accounts generator.',                                         icon:'⚙', price:40.00, category:'Generators',badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:183, name:'Netflix Generator',                               desc:'Netflix account generator.',                                                     icon:'⚙', price:10.00, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:184, name:'Steam Generator [Lifetime]',                      desc:'Lifetime Steam account generator.',                                              icon:'⚙', price:5.00,  category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:185, name:'ChatGPT+ Generator',                              desc:'ChatGPT Plus account generator.',                                                icon:'⚙', price:30.00, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:186, name:'Fortnite Accounts Generator',                     desc:'Fortnite accounts generator.',                                                   icon:'⚙', price:25.00, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:180, name:'Accounts Generator – Week',                       desc:'1 week access to accounts generator.',                                           icon:'⚙', price:18.91, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:181, name:'Accounts Generator – Month',                      desc:'1 month access to accounts generator.',                                          icon:'⚙', price:30.5, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:182, name:'Accounts Generator – Lifetime',                   desc:'Lifetime access to accounts generator.',                                         icon:'⚙', price:48.8, category:'Generators',badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:183, name:'Netflix Generator',                               desc:'Netflix account generator.',                                                     icon:'⚙', price:12.2, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:184, name:'Steam Generator [Lifetime]',                      desc:'Lifetime Steam account generator.',                                              icon:'⚙', price:6.1,  category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:185, name:'ChatGPT+ Generator',                              desc:'ChatGPT Plus account generator.',                                                icon:'⚙', price:36.6, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:186, name:'Fortnite Accounts Generator',                     desc:'Fortnite accounts generator.',                                                   icon:'⚙', price:30.5, category:'Generators',badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Games
   { id:190, name:'FA Steam Accounts',                               desc:'Fresh full access Steam accounts.',                                              icon:'🎮', price:0.01,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:191, name:'GTA 5 Accounts',                                  desc:'Full access GTA 5 account.',                                                     icon:'🎮', price:6.50,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:192, name:'RDR2 Social Club Accounts',                       desc:'Red Dead Redemption 2 Social Club account.',                                    icon:'🎮', price:4.80,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:193, name:'Escape From Tarkov Accounts',                     desc:'Full access Escape From Tarkov account.',                                        icon:'🎮', price:10.50, category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:194, name:'DayZ Accounts',                                   desc:'Full access DayZ account.',                                                      icon:'🎮', price:1.15,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:195, name:'EA FC 26',                                        desc:'EA FC 26 account.',                                                              icon:'🎮', price:12.00, category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:196, name:'ANY Steam Game',                                  desc:'Get any Steam game you want.',                                                   icon:'🎮', price:3.00,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:197, name:'FREE Steam Games Method',                         desc:'Method to get free Steam games.',                                               icon:'🎮', price:25.00, category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:198, name:'Aged Xbox Accounts',                              desc:'Aged Xbox accounts.',                                                            icon:'🎮', price:0.08,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:191, name:'GTA 5 Accounts',                                  desc:'Full access GTA 5 account.',                                                     icon:'🎮', price:7.93,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:192, name:'RDR2 Social Club Accounts',                       desc:'Red Dead Redemption 2 Social Club account.',                                    icon:'🎮', price:5.86,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:193, name:'Escape From Tarkov Accounts',                     desc:'Full access Escape From Tarkov account.',                                        icon:'🎮', price:12.81, category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:194, name:'DayZ Accounts',                                   desc:'Full access DayZ account.',                                                      icon:'🎮', price:1.4,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:195, name:'EA FC 26',                                        desc:'EA FC 26 account.',                                                              icon:'🎮', price:14.64, category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:196, name:'ANY Steam Game',                                  desc:'Get any Steam game you want.',                                                   icon:'🎮', price:3.66,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:197, name:'FREE Steam Games Method',                         desc:'Method to get free Steam games.',                                               icon:'🎮', price:30.5, category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:198, name:'Aged Xbox Accounts',                              desc:'Aged Xbox accounts.',                                                            icon:'🎮', price:0.1,  category:'Games',     badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Supercell
-  { id:200, name:'Clash Royale 1000-2500 Trophies',                 desc:'Clash Royale account with 1,000–2,500 trophies.',                               icon:'👑', price:1.50,  category:'Supercell', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:201, name:'Clash Royale 2500-5000 Trophies',                 desc:'Clash Royale account with 2,500–5,000 trophies.',                               icon:'👑', price:3.25,  category:'Supercell', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:202, name:'Clash Royale 5000-7000 Trophies',                 desc:'Clash Royale account with 5,000–7,000 trophies.',                               icon:'👑', price:6.50,  category:'Supercell', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:203, name:'Clash Royale 7000-10000 Trophies',                desc:'Clash Royale account with 7,000–10,000 trophies.',                              icon:'👑', price:10.25, category:'Supercell', badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:204, name:'Clash Royale 10000-12000 Trophies',               desc:'Clash Royale account with 10,000–12,000 trophies.',                             icon:'👑', price:15.00, category:'Supercell', badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:200, name:'Clash Royale 1000-2500 Trophies',                 desc:'Clash Royale account with 1,000–2,500 trophies.',                               icon:'👑', price:1.83,  category:'Supercell', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:201, name:'Clash Royale 2500-5000 Trophies',                 desc:'Clash Royale account with 2,500–5,000 trophies.',                               icon:'👑', price:3.96,  category:'Supercell', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:202, name:'Clash Royale 5000-7000 Trophies',                 desc:'Clash Royale account with 5,000–7,000 trophies.',                               icon:'👑', price:7.93,  category:'Supercell', badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:203, name:'Clash Royale 7000-10000 Trophies',                desc:'Clash Royale account with 7,000–10,000 trophies.',                              icon:'👑', price:12.5, category:'Supercell', badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:204, name:'Clash Royale 10000-12000 Trophies',               desc:'Clash Royale account with 10,000–12,000 trophies.',                             icon:'👑', price:18.3, category:'Supercell', badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // AI
-  { id:210, name:'ChatGPT Plus CDK',                                desc:'ChatGPT Plus account key.',                                                      icon:'🤖', price:2.90,  category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:211, name:'Gemini Pro 4 Months Gift Link',                   desc:'Gemini Pro 4 months gift link.',                                                 icon:'🤖', price:0.50,  category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:212, name:'Gemini Pro + Antigravity 2 Years',                desc:'Gemini Pro + Antigravity 2 year account.',                                       icon:'🤖', price:3.90,  category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:213, name:'ChatGPT+ Free Method',                            desc:'Method to get ChatGPT+ for free.',                                               icon:'🤖', price:25.00, category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:210, name:'ChatGPT Plus CDK',                                desc:'ChatGPT Plus account key.',                                                      icon:'🤖', price:3.54,  category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:211, name:'Gemini Pro 4 Months Gift Link',                   desc:'Gemini Pro 4 months gift link.',                                                 icon:'🤖', price:0.61,  category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:212, name:'Gemini Pro + Antigravity 2 Years',                desc:'Gemini Pro + Antigravity 2 year account.',                                       icon:'🤖', price:4.76,  category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:213, name:'ChatGPT+ Free Method',                            desc:'Method to get ChatGPT+ for free.',                                               icon:'🤖', price:30.5, category:'AI',        badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 
   // Methods
-  { id:220, name:'Rockstar Activation Code Method',                 desc:'Method to get Rockstar activation codes.',                                       icon:'📋', price:100.00,category:'Methods',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:221, name:'Rockstar & Products Supplier',                    desc:'Supplier access for Rockstar products.',                                         icon:'📋', price:20.00, category:'Methods',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:222, name:'0.50$ NFA Accounts Method',                       desc:'Method to get NFA accounts for $0.50.',                                          icon:'📋', price:20.00, category:'Methods',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
-  { id:223, name:'Rockstar Activation Codes [Auto Delivery]',       desc:'Rockstar activation codes with automatic delivery.',                             icon:'📋', price:0.08,  category:'Methods',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:220, name:'Rockstar Activation Code Method',                 desc:'Method to get Rockstar activation codes.',                                       icon:'📋', price:122.0,category:'Methods',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:221, name:'Rockstar & Products Supplier',                    desc:'Supplier access for Rockstar products.',                                         icon:'📋', price:24.4, category:'Methods',   badge:'limited', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:222, name:'0.50$ NFA Accounts Method',                       desc:'Method to get NFA accounts for $0.50.',                                          icon:'📋', price:24.4, category:'Methods',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
+  { id:223, name:'Rockstar Activation Codes [Auto Delivery]',       desc:'Rockstar activation codes with automatic delivery.',                             icon:'📋', price:0.1,  category:'Methods',   badge:'instant', delivery:'OPEN TICKET ON DISCORD FOR DELIVERY' },
 ];
 
 // ── STATE ──
@@ -1639,6 +1655,9 @@ async function startPayment() {
   const paypalUrl = `https://www.paypal.com/paypalme/rynxzas/${total.toFixed(2)}?note=${encodeURIComponent(orderId)}`;
   window.open(paypalUrl, '_blank');
 
+  // Save order locally so customer can look it up later
+  saveOrderLocally(orderId, email, orderItems, total);
+
   // Show pending screen
   showPendingScreen(orderId, email, orderItems, total);
 
@@ -1655,12 +1674,15 @@ function showPendingScreen(orderId, email, orderItems, total) {
         Complete your PayPal payment in the other tab.<br>
         Your order will be delivered to <strong>${esc(email)}</strong> automatically once payment is confirmed.
       </div>
-      <div style="background:var(--surface2);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:12px 20px;display:inline-block;margin-bottom:1.5rem;font-family:var(--font-mono)">
+      <div style="background:var(--surface2);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:12px 20px;display:inline-block;margin-bottom:0.75rem;font-family:var(--font-mono)">
         <div style="font-size:10px;color:var(--text-hint);letter-spacing:0.1em;text-transform:uppercase">Order ID (include in PayPal note)</div>
         <div style="font-size:16px;color:var(--accent);font-weight:600;margin-top:4px">${orderId}</div>
       </div>
+      <br>
+      <button onclick="copyOrderId('${orderId}')" id="copy-orderid-btn" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:7px 18px;font-size:12px;cursor:pointer;font-family:var(--font-mono);margin-bottom:1.25rem">📋 Copy Order ID</button>
       <div style="font-size:12px;color:var(--text-hint);font-family:var(--font-mono);margin-bottom:1.5rem">
-        ⚠ Do NOT close this window — we're waiting for PayPal to confirm.
+        ⚠ Do NOT close this window — we're waiting for PayPal to confirm.<br>
+        <span style="color:var(--success)">✅ Your Order ID has been saved to this browser.</span>
       </div>
       <div id="poll-status" style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono)">Checking payment status...</div>
       <br>
@@ -1682,6 +1704,7 @@ function startPolling(orderId, email, orderItems, total) {
 
       if (data.paid) {
         clearInterval(_pollInterval);
+        markOrderPaidLocally(orderId);
         // Record stats
         recordPurchase(orderItems.length, total);
         showSuccessScreen(orderId, email);
@@ -1720,8 +1743,9 @@ function showSuccessScreen(orderId, email) {
       </div>
       <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin:0.5rem 0 1rem">
         Check your inbox — your products have been sent to your email.<br>
-        <span style="font-size:11px;color:var(--text-hint)">Don't see it? Check spam or contact support.</span>
+        <span style="font-size:11px;color:var(--text-hint)">Don't see it? Check spam or open a Discord ticket with your Order ID.</span>
       </p>
+      <a href="#order-lookup" onclick="closeCheckout()" style="display:block;text-align:center;font-size:12px;color:var(--accent);margin-bottom:0.5rem;font-family:var(--font-mono)">🔍 Look up this order later</a>
       <button class="btn-cancel" style="margin-top:0.5rem;width:100%" onclick="closeCheckout()">Done</button>
     </div>`;
 }
@@ -1754,6 +1778,91 @@ function showToast(msg) {
 
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── COPY ORDER ID ──
+function copyOrderId(orderId) {
+  navigator.clipboard.writeText(orderId).catch(() => {});
+  const btn = document.getElementById('copy-orderid-btn');
+  if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = '📋 Copy Order ID'; }, 2000); }
+}
+
+// ── SAVE ORDER TO LOCALSTORAGE ──
+function saveOrderLocally(orderId, email, items, total) {
+  try {
+    const orders = JSON.parse(localStorage.getItem('cor_orders') || '[]');
+    orders.unshift({ orderId, email, items: items.map(i => i.name), total, date: new Date().toISOString(), paid: false });
+    localStorage.setItem('cor_orders', JSON.stringify(orders.slice(0, 50)));
+  } catch(e) {}
+}
+
+function markOrderPaidLocally(orderId) {
+  try {
+    const orders = JSON.parse(localStorage.getItem('cor_orders') || '[]');
+    const o = orders.find(x => x.orderId === orderId);
+    if (o) o.paid = true;
+    localStorage.setItem('cor_orders', JSON.stringify(orders));
+  } catch(e) {}
+}
+
+// ── ORDER LOOKUP ──
+async function lookupOrder() {
+  const orderId = document.getElementById('lookup-orderid').value.trim().toUpperCase();
+  const email = document.getElementById('lookup-email').value.trim().toLowerCase();
+  const resultEl = document.getElementById('lookup-result');
+
+  if (!orderId || !email) {
+    resultEl.innerHTML = '<p style="color:var(--warn);font-size:13px;text-align:center">Please enter both your Order ID and email.</p>';
+    return;
+  }
+
+  resultEl.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;font-family:var(--font-mono)">Looking up order...</p>';
+
+  // Check localStorage first
+  try {
+    const orders = JSON.parse(localStorage.getItem('cor_orders') || '[]');
+    const local = orders.find(o => o.orderId === orderId && o.email === email);
+    if (local) {
+      renderLookupResult(resultEl, local.orderId, local.email, local.items, local.total, local.paid, local.date);
+      return;
+    }
+  } catch(e) {}
+
+  // Try server
+  try {
+    const res = await fetch(`${SERVER_URL}/api/order-status/${orderId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.email && data.email.toLowerCase() !== email) {
+        resultEl.innerHTML = '<p style="color:var(--warn);font-size:13px;text-align:center">Email does not match this Order ID.</p>';
+        return;
+      }
+      renderLookupResult(resultEl, orderId, email, [], 0, data.paid, null);
+    } else {
+      resultEl.innerHTML = '<p style="color:var(--warn);font-size:13px;text-align:center">Order not found. Make sure your Order ID and email are correct.</p>';
+    }
+  } catch(e) {
+    resultEl.innerHTML = '<p style="color:var(--warn);font-size:13px;text-align:center">Could not connect to server. Try again.</p>';
+  }
+}
+
+function renderLookupResult(el, orderId, email, items, total, paid, date) {
+  const statusColor = paid ? 'var(--success)' : 'var(--warn)';
+  const statusText = paid ? '✅ Paid & Delivered' : '⏳ Awaiting Payment';
+  const dateStr = date ? new Date(date).toLocaleString() : 'Unknown';
+  const itemsHtml = items.length ? items.map(i => `<li style="font-size:13px;padding:4px 0;border-bottom:1px solid var(--border)">${i}</li>`).join('') : '<li style="font-size:13px;color:var(--text-hint)">Item details not available</li>';
+
+  el.innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:left">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-family:var(--font-mono);font-size:13px;color:var(--accent)">${orderId}</span>
+        <span style="font-size:12px;color:${statusColor};font-weight:600">${statusText}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">📧 ${email}</div>
+      ${date ? `<div style="font-size:11px;color:var(--text-hint);margin-bottom:12px">📅 ${dateStr}</div>` : ''}
+      <ul style="list-style:none;padding:0;margin:0 0 12px">${itemsHtml}</ul>
+      ${!paid ? `<p style="font-size:12px;color:var(--text-muted);margin:0">Payment not confirmed yet. If you already paid, open a <a href="https://discord.gg/cormarket" target="_blank" style="color:var(--accent)">Discord ticket</a> with your Order ID.</p>` : `<p style="font-size:12px;color:var(--text-muted);margin:0">Your product was sent to your email. Didn't get it? Open a <a href="https://discord.gg/cormarket" target="_blank" style="color:var(--accent)">Discord ticket</a>.</p>`}
+    </div>`;
 }
 
 // ── INIT ──
